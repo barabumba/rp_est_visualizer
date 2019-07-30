@@ -1,5 +1,7 @@
+from mpl_toolkits import mplot3d
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib import cm
 
 
 class Extractor(object):
@@ -42,8 +44,14 @@ class Extractor(object):
 if __name__ == '__main__':
     ext = Extractor("result_matrix.dat")
 
-    n = 9
-    print(np.sum(ext.entry_matrix[n]))
-    plt.plot(ext.m['array'], ext.entry_matrix[n])
-    plt.axvline(ext.m['true'])
+    X = np.array(ext.m['array'])
+    Y = np.array(ext.q['array'])
+    X, Y = np.meshgrid(X, Y)
+    Z = ext.entry_matrix
+    Z /= np.sum(Z)
+
+    ax = plt.axes()
+    ax.contourf(X, Y, Z, levels=10, cmap='gist_heat')
+    ax.axhline(ext.q['true'], color='g')
+    ax.axvline(ext.m['true'], color='g')
     plt.show()
